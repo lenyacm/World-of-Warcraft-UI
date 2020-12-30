@@ -17,7 +17,6 @@
 
 //my code
 
-
 extern int main(double set[]);
 extern void show_ui();
 //my code end
@@ -305,6 +304,8 @@ void XSleep(int nWaitInMsecs)
 
 void CMFCApplication1Dlg::OnClickedButton1()
 {
+	hWnd = m_hWnd;
+
 	AllocConsole();//控制台调试窗口开启
 	freopen("CONOUT$", "w", stdout);//开启中文控制台输出支持
 	double delta;
@@ -321,79 +322,166 @@ void CMFCApplication1Dlg::OnClickedButton1()
 
 void CMFCApplication1Dlg::OnBnClickedButton2()
 {
+	hWnd = m_hWnd;
 	// TODO: 在此添加控件通知处理程序代码
 	UI picture;
 	picture.init_ui();
 	time = 0;
+	
+	time++;
+	SetTimer(0, 60, NULL);
 
 	time++;
-	SetTimer(4, 60, NULL);
+	SetTimer(4, 4, NULL);
 
 	time++;
 	SetTimer(1, 4, NULL);
 
 	time++;
 	SetTimer(2, 4, NULL);
-	XSleep(4000);
-
-	time++;
-	SetTimer(3, 4, NULL);
-	XSleep(4000);
-
-	time++;
-	SetTimer(8, 4, NULL);
+	
+	
 }
 
 void CMFCApplication1Dlg::OnTimer(UINT_PTR nIDEvent)
 {
 	UI picture;
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	
-		switch (nIDEvent % 5)
+	if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+	{
+		KillTimer(0);
+		KillTimer(1);
+		KillTimer(2);
+		KillTimer(3);
+		KillTimer(4);
+		KillTimer(5);
+		KillTimer(6);
+		KillTimer(7);
+		KillTimer(8);
+		KillTimer(9);
+		KillTimer(10);
+		KillTimer(11);
+		KillTimer(12);
+	}
+	else
+	{
+		switch (nIDEvent % 13)
 		{
-		case 1:
-			// 如果m_nData1已经达到10，则销毁ID为1的定时器   
+		case 1://绘制司令部  
 			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
 			{
-				
 				KillTimer(1);
 				break;
 			}
-			// 刷新编辑框IDC_EDIT1的显示   
-
-
 			picture.drawAlpha(0, WINDOW_HEIGHT - Hh, &i_home0);
 			picture.drawAlpha(WINDOW_WIDTH - Hw, WINDOW_HEIGHT - Hh, &i_home1);
+			htime[nIDEvent]++;
+			break;
+		case 2://绘制city
+
+			break;
+		case 3://绘制dragon0
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(3);
+				break;
+			}
 			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_dragon0);
 			htime[nIDEvent]++;
 			break;
-		case 2:
+		case 4://绘制dragon1
 			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
 			{
-				
-				KillTimer(nIDEvent);
+				KillTimer(4);
 				break;
 			}
-			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman0);
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_dragon1);
 			htime[nIDEvent]++;
 			break;
-		case 3:
+		case 5://绘制ninja0
 			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
 			{
-				
-				KillTimer(3);
+				KillTimer(5);
+				break;
+			}
+			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_ninja0);
+			htime[nIDEvent]++;
+			break;
+		case 6://绘制ninja1
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(6);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_ninja1);
+			htime[nIDEvent]++;
+			break;
+		case 7://绘制iceman0
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(7);
+				break;
+			}
+			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman0);
+			htime[nIDEvent]++;
+			break;
+		case 8://绘制iceman1
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(8);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman1);
+			htime[nIDEvent]++;
+			break;
+		case 9://绘制lion0
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(9);
 				break;
 			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion0);
 			htime[nIDEvent]++;
 			break;
-		case 4:
+		case 10://绘制lion1
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(10);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion1);
+			htime[nIDEvent]++;
+			break;
+		case 11://绘制wolf0
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(11);
+				break;
+			}
+			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_wolf0);
+			htime[nIDEvent]++;
+			break;
+		case 12://绘制wolf1
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(12);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_wolf1);
+			htime[nIDEvent]++;
+			break;
+		case 0://清屏
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				KillTimer(0);
+				break;
+			}
 			cleardevice();
 			htime[nIDEvent]++;
 			break;
 		default:
 			break;
 		}
-	
+	}
 	CDialogEx::OnTimer(nIDEvent);
 }
