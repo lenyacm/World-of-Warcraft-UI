@@ -7,6 +7,8 @@
 #include "MFCApplication1.h"
 #include "MFCApplication1Dlg.h"
 #include "afxdialogex.h"
+#include"UI.h"
+#include"head.h"
 #include<vector>
 
 #ifdef _DEBUG
@@ -14,14 +16,11 @@
 #endif
 
 //my code
-CDC dc_mem;//内存绘制dc
-CDC* dc;//绘图dc
-std::vector<CPoint> face;//保存人脸中关键点的坐标
-CBitmap bitmap; //内存绘图相关变量
-CImage image;
-//my code end
+
+
 extern int main(double set[]);
 extern void show_ui();
+//my code end
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -77,6 +76,9 @@ CMFCApplication1Dlg::CMFCApplication1Dlg(CWnd* pParent /*=nullptr*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	//  m_hIcon = 0;
+	time = 0;
+	flag = 0;
+	zero = 0;
 }
 
 void CMFCApplication1Dlg::DoDataExchange(CDataExchange* pDX)
@@ -108,6 +110,7 @@ BEGIN_MESSAGE_MAP(CMFCApplication1Dlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFCApplication1Dlg::OnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCApplication1Dlg::OnBnClickedButton2)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -300,7 +303,6 @@ void XSleep(int nWaitInMsecs)
 }
 
 
-
 void CMFCApplication1Dlg::OnClickedButton1()
 {
 	AllocConsole();//控制台调试窗口开启
@@ -312,82 +314,6 @@ void CMFCApplication1Dlg::OnClickedButton1()
 	UpdateData(FALSE);
 	FreeConsole(); // 释放控制台资源
 	
-
-
-	CImage Image;
-	if (!LoadImageFromResource(&Image, IDB_PNG1, _T("PNG"))) return;
-	if (Image.IsNull())
-	{
-		MessageBox(_T("没加载成功"));
-		//return -1;
-	}
-	HWND hwnd = m_hWnd; //获取窗口的HWND
-	::InvalidateRect(hwnd, NULL, true); //或者 ::InvalidateRect( hwnd, NULL, false );
-	::UpdateWindow(hwnd);
-	//若使用前不想把原来绘制的图片去掉，可以删去上面那三段
-	CDC* pDC = GetDC();
-	if (Image.GetBPP() == 32) //确认该图像包含Alpha通道
-	{
-		int i;
-		int j;
-		for (i = 0; i < Image.GetWidth(); i++)
-		{
-			for (j = 0; j < Image.GetHeight(); j++)
-			{
-				byte* pByte = (byte*)Image.GetPixelAddress(i, j);
-				pByte[0] = pByte[0] * pByte[3] / 255;
-				pByte[1] = pByte[1] * pByte[3] / 255;
-				pByte[2] = pByte[2] * pByte[3] / 255;
-			}
-		}
-	}
-	
-	
-
-	CImage Image2;
-	if (!LoadImageFromResource(&Image2, IDB_PNG2, _T("PNG"))) return;
-	if (Image2.IsNull())
-	{
-		MessageBox(_T("没加载成功"));
-		//return -1;
-	}
-	HWND hwnd2 =  m_hWnd; //获取窗口的HWND
-	::InvalidateRect(hwnd2, NULL, false); //或者 ::InvalidateRect( hwnd, NULL, false );
-	::UpdateWindow(hwnd2);
-	//若使用前不想把原来绘制的图片去掉，可以删去上面那三段
-	CDC* pDC2 = GetDC();
-	if (Image2.GetBPP() == 32) //确认该图像包含Alpha通道
-	{
-		int i;
-		int j;
-		for (i = 0; i < Image2.GetWidth(); i++)
-		{
-			for (j = 0; j < Image2.GetHeight(); j++)
-			{
-				byte* pByte = (byte*)Image2.GetPixelAddress(i, j);
-				pByte[0] = pByte[0] * pByte[3] / 255;
-				pByte[1] = pByte[1] * pByte[3] / 255;
-				pByte[2] = pByte[2] * pByte[3] / 255;
-			}
-		}
-	}
-
-	int time = 0;
-	while (time < 1000) {
-		::InvalidateRect(m_hWnd, NULL, true);
-		::UpdateWindow(m_hWnd);
-		Image2.Draw(pDC->m_hDC, 100 - time, 200);
-		Image.Draw(pDC->m_hDC, time, 200);
-		Sleep(40);
-		time += 1;
-	}
-	
-	
-	
-	Image2.Destroy();
-	ReleaseDC(pDC2);
-	Image.Destroy();
-	ReleaseDC(pDC);
 }
 
 
@@ -396,5 +322,78 @@ void CMFCApplication1Dlg::OnClickedButton1()
 void CMFCApplication1Dlg::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	show_ui();
+	UI picture;
+	picture.init_ui();
+	time = 0;
+
+	time++;
+	SetTimer(4, 60, NULL);
+
+	time++;
+	SetTimer(1, 4, NULL);
+
+	time++;
+	SetTimer(2, 4, NULL);
+	XSleep(4000);
+
+	time++;
+	SetTimer(3, 4, NULL);
+	XSleep(4000);
+
+	time++;
+	SetTimer(8, 4, NULL);
+}
+
+void CMFCApplication1Dlg::OnTimer(UINT_PTR nIDEvent)
+{
+	UI picture;
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	
+		switch (nIDEvent % 5)
+		{
+		case 1:
+			// 如果m_nData1已经达到10，则销毁ID为1的定时器   
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				
+				KillTimer(1);
+				break;
+			}
+			// 刷新编辑框IDC_EDIT1的显示   
+
+
+			picture.drawAlpha(0, WINDOW_HEIGHT - Hh, &i_home0);
+			picture.drawAlpha(WINDOW_WIDTH - Hw, WINDOW_HEIGHT - Hh, &i_home1);
+			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_dragon0);
+			htime[nIDEvent]++;
+			break;
+		case 2:
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				
+				KillTimer(nIDEvent);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman0);
+			htime[nIDEvent]++;
+			break;
+		case 3:
+			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
+			{
+				
+				KillTimer(3);
+				break;
+			}
+			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion0);
+			htime[nIDEvent]++;
+			break;
+		case 4:
+			cleardevice();
+			htime[nIDEvent]++;
+			break;
+		default:
+			break;
+		}
+	
+	CDialogEx::OnTimer(nIDEvent);
 }

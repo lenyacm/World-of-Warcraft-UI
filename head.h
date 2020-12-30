@@ -9,6 +9,7 @@
 #include"Lion.h"
 #include"Wolf.h"
 #include"City.h"
+#include"UI.h"
 #include"Functions.h"
 #include"Others.h"
 #endif // !_HEAD_H_

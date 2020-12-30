@@ -9,7 +9,7 @@ int main(double set[])
 {
 	//初始化开始
 	int now = 0;//标记在set数组中的位置
-	Functions Warcraft;
+	Functions Warcraft; UI picture;
 	Warriors::init(set[now++]);//初始化生命元
 	City_sum = set[now++];//初始化城市数
 	int total_time = set[now++];//初始化总时长
@@ -28,8 +28,11 @@ int main(double set[])
 
 	while (1)
 	{
+		picture.init_ui();
+		
 		++now_hour;//整点
 		Warcraft.creat();//武士降生
+		
 
 		already_time += 10;
 		if (already_time > total_time) break;

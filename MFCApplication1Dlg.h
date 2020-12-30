@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 // CMFCApplication1Dlg 对话框
 class CMFCApplication1Dlg : public CDialogEx
 {
@@ -52,4 +51,10 @@ public:
 	double need1;
 	double need2;
 	afx_msg void OnBnClickedButton2();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	int time;
+//	UI picture;
+	int flag;
+//	std::vector<int> htime;
+	int zero;
 };

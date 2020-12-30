@@ -1,6 +1,10 @@
 #include"pch.h"
 #include"UI.h"
 
+IMAGE i_city;
+IMAGE i_home0, i_dragon0, i_iceman0, i_lion0, i_ninja0, i_wolf0;
+IMAGE i_home1, i_dragon1, i_iceman1, i_lion1, i_ninja1, i_wolf1;
+
 void GameBackInit()
 {
 	loadimage(&i_city, L"city.png", Cw, Ch);
@@ -60,6 +64,8 @@ void UI::drawAlpha(int  picture_x, int picture_y, IMAGE* picture) //xŒ™‘ÿ»ÎÕº∆¨µ
 
 void UI::init_ui()
 {
+	initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);//¥¥Ω®¥∞ø⁄
+
 	setfillcolor(WHITE);//…Ë÷√ÃÓ≥‰—’…´
 
 	GameBackInit();
