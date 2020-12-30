@@ -43,6 +43,9 @@ void City::beat()
 	data[turn2]->hp -= data[turn]->attack;
 	if (data[turn2]->hp <= 0)
 	{
+		int nIDEvent = ((data[turn2]->id) - 1) * 13 + (2 * (int)((data[turn2]->type) + 1) + data[turn2]->color + 1);
+		htime[nIDEvent] = 0;
+		KillTimer(hWnd, nIDEvent);
 		printf("%.3d:40 %s %s %d was killed in City %d\n", now_hour, s[data[turn2]->color], ss[data[turn2]->type], data[turn2]->id, id);
 		delete data[turn2];
 		data[turn2] = NULL;
@@ -68,8 +71,10 @@ void City::beat()
 			data[turn]->hp -= data[turn2]->attack / 2;
 			if (data[turn]->hp <= 0)
 			{
-				printf("%.3d:40 %s %s %d was killed in City %d\n", now_hour, s[data[turn]->color], ss[data[turn]->type],
-					data[turn]->id, id);
+				int nIDEvent = ((data[turn]->id) - 1) * 13 + (2 * (int)((data[turn]->type) + 1) + data[turn]->color + 1);
+				htime[nIDEvent] = 0;
+				KillTimer(hWnd, nIDEvent);
+				printf("%.3d:40 %s %s %d was killed in City %d\n", now_hour, s[data[turn]->color], ss[data[turn]->type],data[turn]->id, id);
 				delete data[turn];
 				data[turn] = NULL;
 				if (left_hp != 0)

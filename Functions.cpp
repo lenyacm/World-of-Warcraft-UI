@@ -12,10 +12,11 @@ void Functions::init()
 
 void Functions::creat()
 {
-	for (int i = 0; i != 2; ++i)
+	for (int i = 0; i != 2; i++)
 	{
 		if (Warriors::total[i] >= need[creat_order[i][order[i]]])//生命元足以制造某武士
 		{
+			SetTimer(hWnd, number[i] * 13 + (2 * (int)(creat_order[i][order[i]] + 1) + i + 1), PERIOD, NULL);
 			Warriors* temp;//要实例化的对象
 			number[i]++;
 			switch (creat_order[i][order[i]])
@@ -94,4 +95,46 @@ void Functions::pride()
 		Warriors::total[i] += Warriors_temp[i];
 		Warriors_temp[i] = 0;
 	}
+}
+
+struct XSleep_Structure
+{
+	double duration;
+	HANDLE eventHandle;
+};
+DWORD WINAPI XSleepThread(LPVOID pWaitTime)
+{
+	XSleep_Structure* sleep = (XSleep_Structure*)pWaitTime;
+
+	Sleep(sleep->duration);
+	SetEvent(sleep->eventHandle);
+
+	return 0;
+}
+void Functions::XSleep(double nWaitInMsecs)
+{
+
+	XSleep_Structure sleep;
+	sleep.duration = nWaitInMsecs;
+	sleep.eventHandle = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	/*DWORD dwThreadId;
+	CreateThread(NULL, 0, &XSleepThread, &sleep, 0, &dwThreadId);*/
+
+	HANDLE getHandle;
+	getHandle = (HANDLE)_beginthreadex(NULL, 0,(unsigned int(__stdcall*)(void*))XSleepThread, &sleep, 0, NULL);
+
+	MSG msg;
+	while (::WaitForSingleObject(sleep.eventHandle, 0) == WAIT_TIMEOUT)
+	{
+		// get and dispatch message
+		if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+	}
+	CloseHandle(sleep.eventHandle);
+	CloseHandle(getHandle);
+
 }

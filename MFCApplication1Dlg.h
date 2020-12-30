@@ -57,4 +57,7 @@ public:
 	int flag;
 //	std::vector<int> htime;
 	int zero;
+	int flag2;
+	int temp;
+	int temp2;
 };

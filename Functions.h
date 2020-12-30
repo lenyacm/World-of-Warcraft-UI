@@ -8,5 +8,6 @@ public:
 	void creat();//制造武士
 	void go_ahead();//前进一步
 	void pride();//奖励
+	void XSleep(double nWaitInMsecs);//防阻塞延时
 };
 #endif // !_FUNCTIONS_H_

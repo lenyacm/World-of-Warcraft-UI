@@ -11,6 +11,7 @@
 #define ICEMAN 2
 #define LION 3
 #define WOLF 4
+#define PERIOD 4
 
 extern std::vector<int> htime;
 
@@ -26,5 +27,7 @@ extern int City_sum;
 extern IMAGE i_city;
 extern IMAGE i_home0, i_dragon0, i_iceman0, i_lion0, i_ninja0, i_wolf0;
 extern IMAGE i_home1, i_dragon1, i_iceman1, i_lion1, i_ninja1, i_wolf1;
+
+extern HWND hWnd;
 
 #endif // !_OTHERS_H_

@@ -17,7 +17,7 @@
 
 //my code
 
-extern int main(double set[]);
+extern int main(double set[],int n);
 extern void show_ui();
 //my code end
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -78,6 +78,9 @@ CMFCApplication1Dlg::CMFCApplication1Dlg(CWnd* pParent /*=nullptr*/)
 	time = 0;
 	flag = 0;
 	zero = 0;
+	flag2 = 0;
+	temp = 0;
+	temp2 = 0;
 }
 
 void CMFCApplication1Dlg::DoDataExchange(CDataExchange* pDX)
@@ -90,9 +93,6 @@ void CMFCApplication1Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT5, need2);
 	DDX_Text(pDX, IDC_EDIT6, need3);
 	DDX_Text(pDX, IDC_EDIT7, need4);
-	//  DDX_Text(pDX, IDC_EDIT8, attack);
-	//  DDX_Text(pDX, IDC_EDIT9, attack2);
-	//  DDX_Text(pDX, IDC_EDIT8, attack1);
 	DDX_Text(pDX, IDC_EDIT8, need5);
 	DDX_Text(pDX, IDC_EDIT9, attack1);
 	DDX_Text(pDX, IDC_EDIT10, attack2);
@@ -191,65 +191,6 @@ void CMFCApplication1Dlg::OnPaint()
 	}
 }
 
-
-
-
-void TransparentPNG(CImage* png)
-{
-	for (int i = 0; i < png->GetWidth(); i++)  				//遍历像素处理
-	{
-		for (int j = 0; j < png->GetHeight(); j++)
-		{
-			byte* pucColor = (byte*)(png->GetPixelAddress(i, j));
-			pucColor[0] = pucColor[0] * pucColor[3] / 255;
-			pucColor[1] = pucColor[1] * pucColor[3] / 255;
-			pucColor[2] = pucColor[2] * pucColor[3] / 255;
-		}
-	}
-}
-bool LoadImageFromResource(CImage* pImage, UINT nResID, LPCTSTR lpTyp)
-{
-	if (pImage == NULL)
-		return false;
-	pImage->Destroy();
-	// 查找资源
-	HRSRC hRsrc = ::FindResource(AfxGetResourceHandle(), MAKEINTRESOURCE(nResID), lpTyp);
-	if (hRsrc == NULL)
-		return false;
-	// 加载资源
-	HGLOBAL hImgData = ::LoadResource(AfxGetResourceHandle(), hRsrc);
-	if (hImgData == NULL)
-	{
-		::FreeResource(hImgData);
-		return false;
-	}
-	// 锁定内存中的指定资源
-	LPVOID lpVoid = ::LockResource(hImgData);
-	LPSTREAM pStream = NULL;
-	DWORD dwSize = ::SizeofResource(AfxGetResourceHandle(), hRsrc);
-	HGLOBAL hNew = ::GlobalAlloc(GHND, dwSize);
-	LPBYTE lpByte = (LPBYTE)::GlobalLock(hNew);
-	::memcpy(lpByte, lpVoid, dwSize);
-	// 解除内存中的指定资源
-	::GlobalUnlock(hNew);
-	// 从指定内存创建流对象
-	HRESULT ht = ::CreateStreamOnHGlobal(hNew, TRUE, &pStream);
-	if (ht != S_OK)
-	{
-		GlobalFree(hNew);
-	}
-	else
-	{
-		// 加载图片
-		pImage->Load(pStream);
-		TransparentPNG(pImage);
-		GlobalFree(hNew);
-	}
-	// 释放资源
-	::FreeResource(hImgData);
-	return true;
-}
-
 //当用户拖动最小化窗口时系统调用此函数取得光标
 //显示。
 HCURSOR CMFCApplication1Dlg::OnQueryDragIcon()
@@ -258,226 +199,100 @@ HCURSOR CMFCApplication1Dlg::OnQueryDragIcon()
 }
 
 
-struct XSleep_Structure
-{
-	int duration;
-	HANDLE eventHandle;
-};
-DWORD WINAPI XSleepThread(LPVOID pWaitTime)
-{
-	XSleep_Structure* sleep = (XSleep_Structure*)pWaitTime;
-
-	Sleep(sleep->duration);
-	SetEvent(sleep->eventHandle);
-
-	return 0;
-}
-void XSleep(int nWaitInMsecs)
-{
-
-	XSleep_Structure sleep;
-	sleep.duration = nWaitInMsecs;
-	sleep.eventHandle = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-	/*DWORD dwThreadId;
-	CreateThread(NULL, 0, &XSleepThread, &sleep, 0, &dwThreadId);*/
-
-	HANDLE getHandle;
-	getHandle = (HANDLE)_beginthreadex(NULL, 0,
-		(unsigned int(__stdcall*)(void*))XSleepThread, &sleep, 0, NULL);
-
-	MSG msg;
-	while (::WaitForSingleObject(sleep.eventHandle, 0) == WAIT_TIMEOUT)
-	{
-		// get and dispatch message
-		if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-	}
-	CloseHandle(sleep.eventHandle);
-	CloseHandle(getHandle);
-
-}
-
-
 void CMFCApplication1Dlg::OnClickedButton1()
 {
 	hWnd = m_hWnd;
+	flag = flag2 = 0;
 
-	AllocConsole();//控制台调试窗口开启
-	freopen("CONOUT$", "w", stdout);//开启中文控制台输出支持
 	double delta;
 	UpdateData(TRUE);
 	double set[] = { life,City_sum ,total_time ,need1,need2,need3,need4,need5,attack1,attack2,attack3,attack4,attack5 };
-	main(set);
+	main(set,1);
 	UpdateData(FALSE);
-	FreeConsole(); // 释放控制台资源
-	
 }
-
-
-
 
 void CMFCApplication1Dlg::OnBnClickedButton2()
 {
-	hWnd = m_hWnd;
 	// TODO: 在此添加控件通知处理程序代码
-	UI picture;
-	picture.init_ui();
-	time = 0;
+	AllocConsole();//控制台调试窗口开启
+	freopen("CONOUT$", "w", stdout);//开启中文控制台输出支持
 	
-	time++;
-	SetTimer(0, 60, NULL);
+	double delta;
+	UpdateData(TRUE);
+	double set[] = { life,City_sum ,total_time ,need1,need2,need3,need4,need5,attack1,attack2,attack3,attack4,attack5 };
+	main(set,0);
+	UpdateData(FALSE);
 
-	time++;
-	SetTimer(4, 4, NULL);
-
-	time++;
-	SetTimer(1, 4, NULL);
-
-	time++;
-	SetTimer(2, 4, NULL);
-	
-	
+	FreeConsole(); // 释放控制台资源
 }
 
 void CMFCApplication1Dlg::OnTimer(UINT_PTR nIDEvent)
 {
 	UI picture;
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-	{
+	if (flag==2||flag2==2) {
 		KillTimer(0);
-		KillTimer(1);
-		KillTimer(2);
-		KillTimer(3);
-		KillTimer(4);
-		KillTimer(5);
-		KillTimer(6);
-		KillTimer(7);
-		KillTimer(8);
-		KillTimer(9);
-		KillTimer(10);
-		KillTimer(11);
-		KillTimer(12);
+		htime[nIDEvent] = 0;
+		KillTimer(nIDEvent);
+	}
+	if (htime[nIDEvent] == WINDOW_WIDTH - Ww) {
+		if (nIDEvent % 13 % 2 == 1 && temp != nIDEvent) {
+			temp = nIDEvent;
+			flag++;
+		}
+		else if (nIDEvent % 13 % 2 == 0 && temp2 != nIDEvent) {
+			temp2 = nIDEvent;
+			flag2++;
+		}
+		htime[nIDEvent] = 0;
+		KillTimer(nIDEvent);
 	}
 	else
 	{
+		if (nIDEvent != 0 && nIDEvent != 1 && nIDEvent != 2 && htime[nIDEvent] != WINDOW_WIDTH - Ww)
+			htime[nIDEvent]++;
 		switch (nIDEvent % 13)
 		{
 		case 1://绘制司令部  
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(1);
-				break;
-			}
 			picture.drawAlpha(0, WINDOW_HEIGHT - Hh, &i_home0);
 			picture.drawAlpha(WINDOW_WIDTH - Hw, WINDOW_HEIGHT - Hh, &i_home1);
-			htime[nIDEvent]++;
 			break;
 		case 2://绘制city
-
+			for (zero = 0; zero != City_sum;++zero) {
+				picture.drawAlpha((zero+1)*(WINDOW_WIDTH - Cw)/(City_sum+1), WINDOW_HEIGHT - Ch, &i_city);
+			}
 			break;
 		case 3://绘制dragon0
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(3);
-				break;
-			}
 			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_dragon0);
-			htime[nIDEvent]++;
-			break;
 		case 4://绘制dragon1
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(4);
-				break;
-			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_dragon1);
-			htime[nIDEvent]++;
 			break;
 		case 5://绘制ninja0
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(5);
-				break;
-			}
 			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_ninja0);
-			htime[nIDEvent]++;
 			break;
 		case 6://绘制ninja1
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(6);
-				break;
-			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_ninja1);
-			htime[nIDEvent]++;
 			break;
 		case 7://绘制iceman0
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(7);
-				break;
-			}
 			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman0);
-			htime[nIDEvent]++;
 			break;
 		case 8://绘制iceman1
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(8);
-				break;
-			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_iceman1);
-			htime[nIDEvent]++;
 			break;
 		case 9://绘制lion0
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(9);
-				break;
-			}
-			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion0);
-			htime[nIDEvent]++;
+			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion0);
 			break;
 		case 10://绘制lion1
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(10);
-				break;
-			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_lion1);
-			htime[nIDEvent]++;
 			break;
 		case 11://绘制wolf0
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(11);
-				break;
-			}
 			picture.drawAlpha(htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_wolf0);
-			htime[nIDEvent]++;
 			break;
 		case 12://绘制wolf1
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(12);
-				break;
-			}
 			picture.drawAlpha(WINDOW_WIDTH - Ww - htime[nIDEvent], WINDOW_HEIGHT - Wh, &i_wolf1);
-			htime[nIDEvent]++;
 			break;
 		case 0://清屏
-			if (htime[nIDEvent] == WINDOW_WIDTH - Ww)
-			{
-				KillTimer(0);
-				break;
-			}
 			cleardevice();
-			htime[nIDEvent]++;
 			break;
 		default:
 			break;

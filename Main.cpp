@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main(double set[])
+int main(double set[],int show)
 {
 	//初始化开始
 	int now = 0;//标记在set数组中的位置
@@ -24,15 +24,19 @@ int main(double set[])
 	}
 	for (int i = 0; i != City_sum + 2; ++i)
 		Citys[i].creat(i);//初始化城市
+	if(show==1)
+		picture.init_ui();
+	SetTimer(hWnd, 2, PERIOD, NULL);
+	SetTimer(hWnd, 0, 60, NULL);
+	SetTimer(hWnd, 1, PERIOD, NULL);
 	//初始化结束
 
 	while (1)
 	{
-		picture.init_ui();
-		
 		++now_hour;//整点
 		Warcraft.creat();//武士降生
 		
+		Warcraft.XSleep(16*(WINDOW_WIDTH - Cw) *1.0 / (City_sum + 1));
 
 		already_time += 10;
 		if (already_time > total_time) break;

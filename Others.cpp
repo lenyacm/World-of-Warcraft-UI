@@ -11,3 +11,4 @@ bool head_num[2], game_over;
 City Citys[22];
 int City_sum;//³ÇÊÐÊý
 std::vector<int> htime(1000, 0);
+HWND hWnd;

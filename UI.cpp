@@ -14,7 +14,7 @@ void GameBackInit()
 	loadimage(&i_iceman0, L"iceman0.png", Ww, Wh);
 	loadimage(&i_lion0, L"lion0.png", Ww, Wh);
 	loadimage(&i_ninja0, L"ninja0.png", Ww, Wh);
-	loadimage(&i_wolf0, L"wolf0.png");
+	loadimage(&i_wolf0, L"wolf0.png", Ww, Wh);
 
 	loadimage(&i_home1, L"home1.png", Hw, Hh);
 	loadimage(&i_dragon1, L"dragon1.png", Ww, Wh);
