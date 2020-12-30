@@ -1,51 +1,5 @@
 #include"pch.h"
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<graphics.h>
-#include<conio.h>
-#include<time.h>
-#include<mmsystem.h>
-#pragma comment(lib,"winmm.lib")
-
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 680
-#define WIDTH 480
-
-//司令部图片尺寸
-#define Hw 100
-#define Hh 100
-
-//城市图片尺寸
-#define Cw 100
-#define Ch 200
-
-//武士图片尺寸
-#define Ww 70
-#define Wh 70
-
-//敌机重出现的y坐标
-#define APStart -ah-20
-
-typedef struct Node
-{
-	int x;
-	int y;
-	struct Node* pnext;
-}NODE;
-
-NODE* p_bullet = NULL;
-//MyPlane
-NODE* p_MP = NULL;
-//AttackPlane
-NODE* p_AP = NULL;
-//子弹时间差
-NODE* p_AP2 = NULL;
-DWORD b1, b2, b3, b4, b5, b6;
-
-IMAGE i_city;
-IMAGE i_home0, i_dragon0, i_iceman0, i_lion0, i_ninja0, i_wolf0;
-IMAGE i_home1, i_dragon1, i_iceman1, i_lion1, i_ninja1, i_wolf1;
+#include"UI.h"
 
 void GameBackInit()
 {
@@ -67,7 +21,7 @@ void GameBackInit()
 }
 
 // 载入PNG图并去透明部分
-void drawAlpha(int  picture_x, int picture_y, IMAGE* picture) //x为载入图片的X坐标，y为Y坐标
+void UI::drawAlpha(int  picture_x, int picture_y, IMAGE* picture) //x为载入图片的X坐标，y为Y坐标
 {
 
 	// 变量初始化
@@ -104,29 +58,9 @@ void drawAlpha(int  picture_x, int picture_y, IMAGE* picture) //x为载入图片的X坐
 	}
 }
 
-void show_ui()
+void UI::init_ui()
 {
-	initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);//创建窗口
-
 	setfillcolor(WHITE);//设置填充颜色
 
 	GameBackInit();
-
-	int time = 0;
-	while (time < WINDOW_WIDTH - Ww) {
-		//清画板
-		cleardevice();
-
-		drawAlpha(0, WINDOW_HEIGHT - Hh, &i_home0);
-		drawAlpha(WINDOW_WIDTH - Hw, WINDOW_HEIGHT - Hh, &i_home0);
-		drawAlpha(time, WINDOW_HEIGHT - Wh, &i_dragon0);
-		drawAlpha(WINDOW_WIDTH - Ww - time, WINDOW_HEIGHT - Wh, &i_iceman0);
-		drawAlpha(500, 500, &i_lion0);
-		drawAlpha(600, 600, &i_ninja0);
-
-
-		Sleep(40);
-		time += 1;
-	}
-	closegraph();
 }
